@@ -1,0 +1,7 @@
+<!-- add_recipe.html -->
+<h1>Добавить новый рецепт</h1>
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Добавить рецепт</button>
+</form>

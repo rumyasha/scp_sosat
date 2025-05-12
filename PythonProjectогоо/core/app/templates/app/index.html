@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<center>
+    <hr>
+    {% for i in info %}
+        <a href="{% url 'detail' i.id %}"><h1>{{ i.title }}</h1></a>
+
+    {% endfor %}
+</center>
+</body>
+</html>

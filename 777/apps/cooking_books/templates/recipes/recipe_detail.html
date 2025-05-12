@@ -1,0 +1,30 @@
+<!-- recipe_detail.html -->
+<h1>{{ recipe.title }}</h1>
+<p>{{ recipe.description }}</p>
+<p>Рейтинг: {{ average_rating }}</p>
+<h3>Ингредиенты:</h3>
+<p>{{ recipe.ingredients }}</p>
+<h3>Инструкция:</h3>
+<p>{{ recipe.instructions }}</p>
+
+<h2>Комментарии</h2>
+<ul>
+    {% for comment in comments %}
+        <li>{{ comment.user.username }}: {{ comment.content }}</li>
+    {% endfor %}
+</ul>
+
+<h2>Добавить комментарий:</h2>
+<form method="POST">
+    {% csrf_token %}
+    {{ comment_form.as_p }}
+    <button type="submit">Добавить комментарий</button>
+</form>
+
+<h2>Оценки</h2>
+<form method="POST">
+    {% csrf_token %}
+    <label for="rating">Оцените рецепт:</label>
+    <input type="number" name="rating" min="1" max="5" required>
+    <button type="submit">Оценить</button>
+</form>
