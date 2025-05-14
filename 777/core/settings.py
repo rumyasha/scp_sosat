@@ -139,6 +139,8 @@ PHONENUMBER_DEFAULT_REGION = 'KG'
 
 LOGIN_URL = 'login'  # Использует стандартный URL из django.contrib.auth.urls
 LOGIN_REDIRECT_URL = 'recipe_list'  # Куда перенаправлять после входа
+LOGOUT_REDIRECT_URL = 'login'      # куда перенаправлять после выхода
+AUTH_USER_MODEL = 'your_app.CustomUser'  # Замените your_app на имя вашего приложения
 
 
 

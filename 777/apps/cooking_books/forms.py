@@ -1,7 +1,11 @@
-from django.contrib.auth import models
+from django.contrib.auth import models, authenticate, login
 from django import forms
+from django.contrib.auth.forms import AuthenticationForm
 
 from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse_lazy
+from django.views import View
+
 from .models import Recipe, Comment, Rating
 from django.contrib import messages
 
@@ -61,3 +65,47 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ['content']
+
+
+class LoginView(View):
+    template_name = 'registration/login.html'  # ваш шаблон
+    success_url = reverse_lazy('recipe_list')  # страница после успешного входа
+    form_class = AuthenticationForm
+
+    def get(self, request):
+        # Показываем форму входа для GET-запросов
+        return render(request, self.template_name, {'form': self.form_class()})
+
+    def post(self, request):
+        form = self.form_class(request, data=request.POST)
+
+        if form.is_valid():
+            # Аутентификация пользователя
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(request, username=username, password=password)
+
+            if user is not None:
+                login(request, user)
+                messages.success(request, f'Добро пожаловать, {username}!')
+
+                # Перенаправление на страницу, указанную в параметре 'next'
+                next_url = request.POST.get('next', self.success_url)
+                return redirect(next_url)
+
+        # Если аутентификация не удалась
+        messages.error(request, 'Неверное имя пользователя или пароль')
+        return render(request, self.template_name, {'form': form})
+
+
+from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from .models import CustomUser
+
+
+class RegisterForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'email', 'password1', 'password2']
